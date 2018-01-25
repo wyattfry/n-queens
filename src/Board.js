@@ -168,8 +168,10 @@
     hasAnyMajorDiagonalConflicts: function() {
       var board = this.rows();
       var boardSize = this.get('n');
-      var hasConflict = false;
-      for (var i = -(boardSize - 1); i < boardSize; i++) {
+      var minRange = this._getFirstRowColumnIndexForMajorDiagonalOn(boardSize-1, 0);
+      var maxRange = this._getFirstRowColumnIndexForMajorDiagonalOn(0, boardSize-1);
+
+      for (var i = minRange; i < maxRange; i++) {
         if (this.hasMajorDiagonalConflictAt(i)) {
           return true;
         }
@@ -205,13 +207,10 @@
     hasAnyMinorDiagonalConflicts: function() {
       var board = this.rows();
       var boardSize = this.get('n');
-      var min = this._getFirstRowColumnIndexForMajorDiagonalOn(0, 0);
-      console.log(min);
-      var max = this._getFirstRowColumnIndexForMajorDiagonalOn(boardSize, boardSize);
-      
+      var minRange = this._getFirstRowColumnIndexForMinorDiagonalOn(0, 0);
+      var maxRange = this._getFirstRowColumnIndexForMinorDiagonalOn(boardSize, boardSize);
 
-      var hasConflict = false;
-      for (var i = 0; i < 2 * boardSize; i++) {
+      for (var i = minRange; i < 2 * maxRange; i++) {
         if (this.hasMinorDiagonalConflictAt(i)) {
           return true;
         }
