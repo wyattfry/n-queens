@@ -116,6 +116,7 @@
       var board = this.rows();
       var boardSize = this.get('n');
       var count = 0;
+      
       for (var i = 0; i < boardSize; i++) {
         if (board[i][colIndex] === 1) {
           count++;
@@ -132,6 +133,7 @@
       var board = this.rows();
       var boardSize = this.get('n');
       var hasConflict = false;
+
       for (var i = 0; i < boardSize; i++) {
         if (this.hasColConflictAt(i)) {
           return true;

@@ -19,6 +19,36 @@ window.findNRooksSolution = function(n) {
   var solution = undefined; //fixme
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  // instantiate the board
+      // var board = new Board(matrix);
+  // make a variable called rooksPlaced
+  // make a variable called startingSpace and assign [0,0]
+
+  // findNextConflictFreeSpace (space [row, col])
+    // if end of board is reached
+      // remove all rooks from board
+      // set rooksPlaced equal to zero
+      // set startingSpace = nextSpace(startingSpace)
+      // if startingSpace has reached end of board
+        // return
+    // place Rook on space
+    // if hasAnyRooksConflicts returns false
+      // increment rooksPlaced
+      // if rooksPlaced equal to n
+        // return board
+      // else (need more rooks)
+        // call findNextConflictFreeSpace(nextSpace(currentSpace))
+    // if hasAnyRooksConflicts returns true
+      // remove Rook 
+      // call findNextConflictFreeSpace(nextSpace(currentSpace))
+
+    // call findNextConflictFreeSpace(startingSpace)
+
+  // function next space
+    // input: takes in row, col as argument as integers
+    // if next space is undefined, return empty array
+    // output: returns row, col of next space as array [row, col]
+
   return solution;
 };
 
