@@ -21,14 +21,15 @@ window.findNRooksSolution = function (n) {
   // make a variable called rooksPlaced
   var rooksPlaced = 0;
   // make a variable called startingSpace and assign [0,0]
-  var startingSpace = [0, 0];
-  var startRow = 0;
-  var startCol = 0;
+  var startingRowCol = [0, 0];
+  var temp = -1;
 
   // findNextConflictFreeSpace (space [row, col])
-  var findNextConflictFreeSpace = function (row, col) {
+  var findNextConflictFreeSpace = function (rowCol) {
     // if end of board is reached
-    if (nextSpace(board, row, col).length === 0) {
+
+    //var next = nextSpace(board, row, col);
+    if (!board._isInBounds(rowCol[0],rowCol[1])) {
       // remove all rooks from board
       for (var i = 0; i < n; i++) {
         for (var j = 0; j < n; j++) {
@@ -40,19 +41,21 @@ window.findNRooksSolution = function (n) {
       // set rooksPlaced equal to zero
       rooksPlaced = 0;
       // set startingSpace = nextSpace(startingSpace)
-      [startRow, startCol] = nextSpace(board, row, col); // es6 destructuring, if bugs occur, check this
-
+      //[startRow, startCol] = nextSpace(board, row, col); // es6 destructuring, if bugs occur, check this
+      startingRowCol = nextSpace(board, rowCol);
       // if startingSpace has reached end of board
       // return
-      if (startRow === undefined && startCol === undefined) {
-        return;
+      if (!board._isInBounds(startingRowCol[0], startingRowCol[1])) {
+        return board;
+      } else {
+        findNextConflictFreeSpace(startingRowCol);
       }
-
+    } else {
       // place Rook on space
-      board.get(startRow)[startCol] = 1;
+      board.get(rowCol[0])[rowCol[1]] = 1;
 
       // if hasAnyRooksConflicts returns false
-      if (!board.hasAnyRooksConflicts) {
+      if (!board.hasAnyRooksConflicts()) {
         // increment rooksPlaced
         rooksPlaced++;
         // if rooksPlaced equal to n
@@ -63,14 +66,16 @@ window.findNRooksSolution = function (n) {
           // else (need more rooks)
           // call findNextConflictFreeSpace(nextSpace(currentSpace))
         } else {
-          findNextConflictFreeSpace(nextSpace(board, startRow, startCol));
+          temp = nextSpace(board, rowCol);
+          findNextConflictFreeSpace(temp);
         }
         // if hasAnyRooksConflicts returns true
         // remove Rook 
         // call findNextConflictFreeSpace(nextSpace(currentSpace))
       } else {
-        board.get(startRow)[startCol] = 0;
-        findNextConflictFreeSpace(nextSpace(board, startRow, startCol));
+        board.get(rowCol[0])[rowCol[1]] = 0;
+        temp = nextSpace(board, rowCol);
+        findNextConflictFreeSpace(temp);
       }
     }
   }
@@ -79,17 +84,17 @@ window.findNRooksSolution = function (n) {
   // input: takes in row, col as argument as integers
   // if next space is undefined, return empty array
   // output: returns row, col of next space as array [row, col]
-  var nextSpace = function (board, row, col) {
-    if (col === n - 1 && row === n - 1) {
-      return [];
+  var nextSpace = function (board, rowCol) {
+    if (rowCol[1] === n - 1 && rowCol[0] === n - 1) {
+      return [-1, -1];
     }
-    if (col === n - 1) {
-      return [row + 1, 0];
+    if (rowCol[1] === n - 1) {
+      return [rowCol[0] + 1, 0];
     }
-    return [row, col + 1];
+    return [rowCol[0], rowCol[1] + 1];
   }
 
-  findNextConflictFreeSpace(startRow, startCol);
+  findNextConflictFreeSpace(startingRowCol);
 };
 
 
