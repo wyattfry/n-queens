@@ -15,42 +15,83 @@
 
 
 
-window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
-
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+window.findNRooksSolution = function (n) {
   // instantiate the board
-      // var board = new Board(matrix);
+  var board = new Board({ n: n });
   // make a variable called rooksPlaced
+  var rooksPlaced = 0;
   // make a variable called startingSpace and assign [0,0]
+  var startingSpace = [0, 0];
+  var startRow = 0;
+  var startCol = 0;
 
   // findNextConflictFreeSpace (space [row, col])
+  var findNextConflictFreeSpace = function (row, col) {
     // if end of board is reached
+    if (nextSpace(board, row, col).length === 0) {
       // remove all rooks from board
+      for (var i = 0; i < n; i++) {
+        for (var j = 0; j < n; j++) {
+          if (board.get(i)[j]) {
+            board.togglePiece(i, j);
+          }
+        }
+      }
       // set rooksPlaced equal to zero
+      rooksPlaced = 0;
       // set startingSpace = nextSpace(startingSpace)
-      // if startingSpace has reached end of board
-        // return
-    // place Rook on space
-    // if hasAnyRooksConflicts returns false
-      // increment rooksPlaced
-      // if rooksPlaced equal to n
-        // return board
-      // else (need more rooks)
-        // call findNextConflictFreeSpace(nextSpace(currentSpace))
-    // if hasAnyRooksConflicts returns true
-      // remove Rook 
-      // call findNextConflictFreeSpace(nextSpace(currentSpace))
+      [startRow, startCol] = nextSpace(board, row, col); // es6 destructuring, if bugs occur, check this
 
-    // call findNextConflictFreeSpace(startingSpace)
+      // if startingSpace has reached end of board
+      // return
+      if (startRow === undefined && startCol === undefined) {
+        return;
+      }
+
+      // place Rook on space
+      board.get(startRow)[startCol] = 1;
+
+      // if hasAnyRooksConflicts returns false
+      if (!board.hasAnyRooksConflicts) {
+        // increment rooksPlaced
+        rooksPlaced++;
+        // if rooksPlaced equal to n
+        // return board
+        if (rooksPlaced === n) {
+          console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
+          return board;
+          // else (need more rooks)
+          // call findNextConflictFreeSpace(nextSpace(currentSpace))
+        } else {
+          findNextConflictFreeSpace(nextSpace(board, startRow, startCol));
+        }
+        // if hasAnyRooksConflicts returns true
+        // remove Rook 
+        // call findNextConflictFreeSpace(nextSpace(currentSpace))
+      } else {
+        board.get(startRow)[startCol] = 0;
+        findNextConflictFreeSpace(nextSpace(board, startRow, startCol));
+      }
+    }
+  }
 
   // function next space
-    // input: takes in row, col as argument as integers
-    // if next space is undefined, return empty array
-    // output: returns row, col of next space as array [row, col]
+  // input: takes in row, col as argument as integers
+  // if next space is undefined, return empty array
+  // output: returns row, col of next space as array [row, col]
+  var nextSpace = function (board, row, col) {
+    if (col === n - 1 && row === n - 1) {
+      return [];
+    }
+    if (col === n - 1) {
+      return [row + 1, 0];
+    }
+    return [row, col + 1];
+  }
 
-  return solution;
+  findNextConflictFreeSpace(startRow, startCol);
 };
+
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
