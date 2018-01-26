@@ -13,11 +13,17 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
-
+window.returnBoard = function(n) {
+  var innerFunction = function(x) {
+    return new Board({n:x});
+  }
+  return innerFunction(n);
+}
 
 window.findNRooksSolution = function (n) {
   // instantiate the board
   var board = new Board({ n: n });
+  console.log('board', board);
   // make a variable called rooksPlaced
   var rooksPlaced = 0;
   // make a variable called startingSpace and assign [0,0]
@@ -42,11 +48,12 @@ window.findNRooksSolution = function (n) {
       rooksPlaced = 0;
       // set startingSpace = nextSpace(startingSpace)
       //[startRow, startCol] = nextSpace(board, row, col); // es6 destructuring, if bugs occur, check this
-      startingRowCol = nextSpace(board, rowCol);
+      startingRowCol = nextSpace(rowCol);
       // if startingSpace has reached end of board
       // return
       if (!board._isInBounds(startingRowCol[0], startingRowCol[1])) {
-        return board;
+        
+        return board.rows();
       } else {
         findNextConflictFreeSpace(startingRowCol);
       }
@@ -62,11 +69,11 @@ window.findNRooksSolution = function (n) {
         // return board
         if (rooksPlaced === n) {
           console.log('Single solution for ' + n + ' rooks:', JSON.stringify(board));
-          return board;
+          return board.rows();
           // else (need more rooks)
           // call findNextConflictFreeSpace(nextSpace(currentSpace))
         } else {
-          temp = nextSpace(board, rowCol);
+          temp = nextSpace(rowCol);
           findNextConflictFreeSpace(temp);
         }
         // if hasAnyRooksConflicts returns true
@@ -74,7 +81,7 @@ window.findNRooksSolution = function (n) {
         // call findNextConflictFreeSpace(nextSpace(currentSpace))
       } else {
         board.get(rowCol[0])[rowCol[1]] = 0;
-        temp = nextSpace(board, rowCol);
+        temp = nextSpace(rowCol);
         findNextConflictFreeSpace(temp);
       }
     }
@@ -84,7 +91,7 @@ window.findNRooksSolution = function (n) {
   // input: takes in row, col as argument as integers
   // if next space is undefined, return empty array
   // output: returns row, col of next space as array [row, col]
-  var nextSpace = function (board, rowCol) {
+  var nextSpace = function (rowCol) {
     if (rowCol[1] === n - 1 && rowCol[0] === n - 1) {
       return [-1, -1];
     }
@@ -94,7 +101,7 @@ window.findNRooksSolution = function (n) {
     return [rowCol[0], rowCol[1] + 1];
   }
 
-  findNextConflictFreeSpace(startingRowCol);
+  return findNextConflictFreeSpace(startingRowCol);
 };
 
 
